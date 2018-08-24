@@ -14,7 +14,6 @@ import javax.inject.Inject;
 public class MainActivity extends AppCompatActivity implements MainNavigator {
 
     private TextView textView;
-
     @Inject
     ViewModelProvider.Factory viewModelFactory;
 
@@ -27,12 +26,13 @@ public class MainActivity extends AppCompatActivity implements MainNavigator {
         ((MainApplication) getApplicationContext()).getComponent().inject(this);
         textView = (TextView) findViewById(R.id.activity_main_text_view);
         mainViewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel.class);
+        mainViewModel.setNavigator(this);
         mainViewModel.callGetSum(4, 5);
     }
 
 
     @Override
     public void displaySum(Integer integer) {
-        textView.setText(integer);
+        textView.setText("" + integer);
     }
 }

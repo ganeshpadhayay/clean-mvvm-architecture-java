@@ -1,5 +1,7 @@
 package com.example.ganesh.dmsmobileapp.ui.main;
 
+import android.util.Log;
+
 import com.example.domain.usecases.GetSum;
 import com.example.ganesh.dmsmobileapp.base.BaseViewModel;
 
@@ -7,14 +9,7 @@ import io.reactivex.observers.DisposableObserver;
 
 public class MainViewModel extends BaseViewModel<MainNavigator> {
 
-    //get your Navigator here
-    private MainNavigator mainNavigator;
-
-    //get the use case here
     private GetSum getSumUseCase;
-
-    public MainViewModel() {
-    }
 
     public MainViewModel(GetSum getSumUseCase) {
         this.getSumUseCase = getSumUseCase;
@@ -24,7 +19,8 @@ public class MainViewModel extends BaseViewModel<MainNavigator> {
         getSumUseCase.execute(new DisposableObserver<Integer>() {
             @Override
             public void onNext(Integer integer) {
-                mainNavigator.displaySum(integer);
+                Log.e("ganesh", "use case on next  " + integer);
+                getNavigator().displaySum(integer);
             }
 
             @Override
@@ -40,17 +36,8 @@ public class MainViewModel extends BaseViewModel<MainNavigator> {
     }
 
     @Override
-    public void onNavigatorAttached(MainNavigator navigator) {
-        this.mainNavigator = mainNavigator;
-    }
-
-    @Override
-    public void onNavigatorDetached() {
-        this.mainNavigator = null;
-    }
-
-    @Override
-    public void onDestroyed() {
+    protected void onCleared() {
+        super.onCleared();
         if (getSumUseCase != null) {
             getSumUseCase.dispose();
         }

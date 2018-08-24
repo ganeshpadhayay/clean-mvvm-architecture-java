@@ -11,12 +11,6 @@ public abstract class BaseViewModel<N> extends ViewModel {
     public BaseViewModel() {
     }
 
-    public abstract void onNavigatorAttached(N navigator);
-
-    public abstract void onNavigatorDetached();
-
-    public abstract void onDestroyed();
-
     public void setNavigator(N navigator) {
         this.navigator = new WeakReference<>(navigator);
     }
