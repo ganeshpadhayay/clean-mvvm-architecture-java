@@ -5,8 +5,6 @@ import com.example.domain.executor.PostExecutionThread;
 import com.example.domain.repository.WordRepository;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
 
 public class GetSum extends UseCase<Integer, GetSum.Params> {
 
@@ -20,13 +18,7 @@ public class GetSum extends UseCase<Integer, GetSum.Params> {
 
     @Override
     public Observable<Integer> buildUseCaseObservable(final Params params) {
-        return Observable.create(new ObservableOnSubscribe<Integer>() {
-            @Override
-            public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
-                emitter.onNext(wordRepository.sum(params.number1, params.number2));
-                emitter.onComplete();
-            }
-        });
+        return wordRepository.sum(params.number1, params.number2);
     }
 
     public static final class Params {

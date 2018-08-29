@@ -2,6 +2,7 @@ package com.example.ganesh.dmsmobileapp.di;
 
 import android.content.Context;
 
+import com.example.data.data.WordRoomDatabase;
 import com.example.data.network.ApiClient;
 import com.example.data.network.ApiInterface;
 import com.example.data.sharedpreference.SharedPreferenceHelper;
@@ -14,6 +15,7 @@ import dagger.Provides;
 
 @Module
 public class AppModule {
+
     private Context context;
 
     public AppModule(Context context) {
@@ -29,6 +31,12 @@ public class AppModule {
     @Singleton
     SharedPreferenceHelper provideSharedPreferenceHelper() {
         return new SharedPreferenceHelper(this.context);
+    }
+
+    @Provides
+    @Singleton
+    WordRoomDatabase provideWordRoomDatabase(Context context) {
+        return WordRoomDatabase.getDatabase(this.context);
     }
 
     @Provides

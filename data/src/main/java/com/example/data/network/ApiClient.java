@@ -12,13 +12,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
     private static String SERVER_BASE_URL = "http://dev.xshowroom.in:8080/services/api/v1/";
-    public static String SERVER_URL = "http://dev.xshowroom.in:8080";
     private static Retrofit retrofit = null;
 
-
     public static Retrofit getClient() {
-
-
         if (retrofit == null) {
             HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -37,6 +33,4 @@ public class ApiClient {
         }
         return retrofit;
     }
-
-
 }
