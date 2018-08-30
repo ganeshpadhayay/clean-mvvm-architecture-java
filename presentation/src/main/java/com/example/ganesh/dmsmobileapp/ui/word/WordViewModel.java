@@ -1,5 +1,6 @@
 package com.example.ganesh.dmsmobileapp.ui.word;
 
+import android.arch.lifecycle.MutableLiveData;
 import android.util.Log;
 
 import com.example.domain.models.Word;
@@ -16,11 +17,16 @@ import io.reactivex.observers.DisposableObserver;
 
 public class WordViewModel extends BaseViewModel<WordNavigator> {
 
+    //get all the use cases here
     private GetAllWords getAllWords;
     private InsertWord insertWord;
     private DeleteThisWord deleteThisWord;
     private UpdateThisWord updateThisWord;
     private GetTheIndexOfTopWord getTheIndexOfTopWord;
+
+    //data
+    public MutableLiveData<List<Word>> allWords;
+
 
     public WordViewModel(GetAllWords getAllWords, InsertWord insertWord, DeleteThisWord deleteThisWord, UpdateThisWord updateThisWord, GetTheIndexOfTopWord getTheIndexOfTopWord) {
         this.getAllWords = getAllWords;
@@ -34,7 +40,7 @@ public class WordViewModel extends BaseViewModel<WordNavigator> {
         getAllWords.execute(new DisposableObserver<List<Word>>() {
             @Override
             public void onNext(List<Word> words) {
-                getNavigator().updateWordList(words);
+                allWords.setValue(words);
             }
 
             @Override
@@ -129,6 +135,13 @@ public class WordViewModel extends BaseViewModel<WordNavigator> {
 
             }
         }, UpdateThisWord.Params.updateThisWord(wordId, newWord));
+    }
+
+    public MutableLiveData<List<Word>> getWords() {
+        if (allWords == null) {
+            allWords = new MutableLiveData<>();
+        }
+        return allWords;
     }
 
     @Override

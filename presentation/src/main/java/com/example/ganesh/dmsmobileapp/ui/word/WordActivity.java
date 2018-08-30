@@ -1,19 +1,19 @@
 package com.example.ganesh.dmsmobileapp.ui.word;
 
-import android.content.Intent;
+import android.arch.lifecycle.Observer;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.domain.models.Word;
 import com.example.ganesh.dmsmobileapp.MainApplication;
 import com.example.ganesh.dmsmobileapp.R;
 import com.example.ganesh.dmsmobileapp.base.BaseActivity;
 import com.example.ganesh.dmsmobileapp.ui.adapter.WordListAdapter;
-import com.example.ganesh.dmsmobileapp.ui.newword.NewWordActivity;
 
 import java.util.List;
 
@@ -27,86 +27,77 @@ public class WordActivity extends BaseActivity<WordViewModel> implements View.On
     @Inject
     WordViewModel wordViewModel;
 
-    private Button deleteButton, updateButton;
+    private Button deleteButton, updateButton, addButton;
+    private EditText editTextWord;
     private WordListAdapter adapter;
 
-
-    public static final int NEW_WORD_ACTIVITY_REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_word);
         ((MainApplication) getApplicationContext()).getComponent().inject(this);
-
+        editTextWord = findViewById(R.id.activity_word_et_word);
         deleteButton = findViewById(R.id.activity_main_delete_button);
         updateButton = findViewById(R.id.activity_main_update_button);
+        addButton = findViewById(R.id.activity_word_btn_add_word);
 
         deleteButton.setOnClickListener(this);
         updateButton.setOnClickListener(this);
+        addButton.setOnClickListener(this);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(WordActivity.this, NewWordActivity.class);
-                startActivityForResult(intent, NEW_WORD_ACTIVITY_REQUEST_CODE);
-            }
-        });
 
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
         adapter = new WordListAdapter(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-//        wordViewModel = ViewModelProviders.of(this).get(WordViewModel.class);
-        wordViewModel.setNavigator(this);
-        wordViewModel.getAllWords();
-//        wordViewModel.getAllWords().observe(this, new Observer<List<Word>>() {
-//            @Override
-//            public void onChanged(@Nullable List<Word> words) {
-//                //update the cached copy of words in adapter
-//                adapter.setWords(words);
-//            }
-//        });
-    }
+        getViewModel().setNavigator(this);
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+        getViewModel().getAllWords();
 
-        if (requestCode == NEW_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            com.example.domain.models.Word word = new com.example.domain.models.Word(data.getStringExtra(NewWordActivity.EXTRA_REPLY), data.getStringExtra(NewWordActivity.EXTRA_REPLY).length());
-            wordViewModel.insertWord(word);
-        } else {
-            Toast.makeText(getApplicationContext(), R.string.empty_not_saved, Toast.LENGTH_LONG).show();
-        }
+        getViewModel().getWords().observe(this, new Observer<List<Word>>() {
+            @Override
+            public void onChanged(@android.support.annotation.Nullable List<Word> words) {
+                adapter.setWords(words);
+            }
+        });
+
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.activity_main_delete_button:
-                wordViewModel.getTheIndexOfTopWord(TOP_INDEX_ACTION_DELETE);
-
+                getViewModel().getTheIndexOfTopWord(TOP_INDEX_ACTION_DELETE);
                 break;
             case R.id.activity_main_update_button:
-                wordViewModel.getTheIndexOfTopWord(TOP_INDEX_ACTION_UPDATE);
+                getViewModel().getTheIndexOfTopWord(TOP_INDEX_ACTION_UPDATE);
+                break;
+            case R.id.activity_word_btn_add_word:
+                handleAddButtonClick();
+                break;
         }
     }
 
-
-    @Override
-    public void updateWordList(List<com.example.domain.models.Word> words) {
-        adapter.setWords(words);
-
+    public void handleAddButtonClick() {
+        String text = editTextWord.getText().toString();
+        if (text.equals("")) {
+            Toast.makeText(getApplicationContext(), R.string.empty_not_saved, Toast.LENGTH_LONG).show();
+        } else {
+            Word word = new Word(text, text.length());
+            getViewModel().insertWord(word);
+            editTextWord.setText("");
+            editTextWord.clearFocus();
+        }
     }
 
     @Override
     public void updateTopIndex(Integer wordId, String action) {
         if (action.equals(TOP_INDEX_ACTION_DELETE))
-            wordViewModel.deleteThisWord(wordId);
+            getViewModel().deleteThisWord(wordId);
         else
-            wordViewModel.updateThisWord(wordId, "dsakagdad");
+            getViewModel().updateThisWord(wordId, "dsakagdad");
     }
 
     @Override
