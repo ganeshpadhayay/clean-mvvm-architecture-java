@@ -4,20 +4,21 @@ import com.example.domain.models.Word;
 
 import java.util.List;
 
-import io.reactivex.Observable;
+import io.reactivex.Flowable;
+import io.reactivex.Single;
 
 public interface WordRepository {
 
-    Observable<Integer> sum(int a, int b);
+    Single<Integer> sum(int a, int b);
 
-    Observable<List<Word>> getAllWords();
+    Flowable<List<Word>> getAllWords();
 
-    Observable<Boolean> insertThisWord(Word word);
+    Single<Boolean> insertThisWord(Word word);
 
-    Observable<Boolean> deleteThisWord(int wordId);
+    Single<Boolean> deleteThisWord(int wordId);
 
-    Observable<Boolean> updateThisWord(int wordId, String newWord);
+    Single<Boolean> updateThisWord(int wordId, String newWord);
 
-    Observable<Word> getTheIndexOfTopWord();
+    Single<Word> getTheIndexOfTopWord();
 
 }

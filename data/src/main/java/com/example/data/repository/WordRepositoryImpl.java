@@ -13,7 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import io.reactivex.Observable;
+import io.reactivex.Flowable;
+import io.reactivex.Single;
+import io.reactivex.functions.Function;
 
 public class WordRepositoryImpl implements WordRepository {
 
@@ -34,8 +36,8 @@ public class WordRepositoryImpl implements WordRepository {
 
 
     @Override
-    public Observable<Integer> sum(final int a, final int b) {
-        return Observable.fromCallable(new Callable<Integer>() {
+    public Single<Integer> sum(final int a, final int b) {
+        return Single.fromCallable(new Callable<Integer>() {
             @Override
             public Integer call() throws Exception {
                 return (a + b);
@@ -44,13 +46,12 @@ public class WordRepositoryImpl implements WordRepository {
     }
 
     @Override
-    public Observable<List<Word>> getAllWords() {
-        return Observable.fromCallable(new Callable<List<Word>>() {
+    public Flowable<List<Word>> getAllWords() {
+        return db.wordDao().getAllWords().map(new Function<List<com.example.data.models.Word>, List<Word>>() {
             @Override
-            public List<Word> call() throws Exception {
+            public List<Word> apply(List<com.example.data.models.Word> words) throws Exception {
                 List<Word> list = new ArrayList<>();
-                List<com.example.data.models.Word> listWords = db.wordDao().getAllWords();
-                for (com.example.data.models.Word item : listWords) {
+                for (com.example.data.models.Word item : words) {
                     list.add(new Word(item.getWordId(), item.getWord(), item.getWordLength()));
                 }
                 return list;
@@ -59,8 +60,8 @@ public class WordRepositoryImpl implements WordRepository {
     }
 
     @Override
-    public Observable<Boolean> insertThisWord(final Word word) {
-        return Observable.fromCallable(new Callable<Boolean>() {
+    public Single<Boolean> insertThisWord(final Word word) {
+        return Single.fromCallable(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
                 com.example.data.models.Word item = new com.example.data.models.Word(word.getWord(), word.getWordLength());
@@ -71,8 +72,8 @@ public class WordRepositoryImpl implements WordRepository {
     }
 
     @Override
-    public Observable<Boolean> deleteThisWord(final int wordId) {
-        return Observable.fromCallable(new Callable<Boolean>() {
+    public Single<Boolean> deleteThisWord(final int wordId) {
+        return Single.fromCallable(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
                 db.wordDao().deleteThisWord(wordId);
@@ -82,8 +83,8 @@ public class WordRepositoryImpl implements WordRepository {
     }
 
     @Override
-    public Observable<Boolean> updateThisWord(final int wordId, final String newWord) {
-        return Observable.fromCallable(new Callable<Boolean>() {
+    public Single<Boolean> updateThisWord(final int wordId, final String newWord) {
+        return Single.fromCallable(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
                 db.wordDao().updateThisWord(wordId, newWord);
@@ -93,13 +94,11 @@ public class WordRepositoryImpl implements WordRepository {
     }
 
     @Override
-    public Observable<Word> getTheIndexOfTopWord() {
-        return Observable.fromCallable(new Callable<Word>() {
+    public Single<Word> getTheIndexOfTopWord() {
+        return db.wordDao().getTheIndexOfTopWord().map(new Function<com.example.data.models.Word, Word>() {
             @Override
-            public Word call() throws Exception {
-                com.example.data.models.Word item = db.wordDao().getTheIndexOfTopWord();
-                Word word = new Word(item.getWordId(), item.getWord(), item.getWordLength());
-                return word;
+            public Word apply(com.example.data.models.Word word) throws Exception {
+                return new Word(word.getWordId(), word.getWord(), word.getWordLength());
             }
         });
     }

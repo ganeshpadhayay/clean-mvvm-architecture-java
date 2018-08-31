@@ -1,12 +1,14 @@
 package com.example.domain.usecases;
 
-import com.example.domain.base.UseCase;
+import com.example.domain.base.FlowableUseCase;
+import com.example.domain.base.SingleUseCase;
 import com.example.domain.executor.PostExecutionThread;
 import com.example.domain.repository.WordRepository;
 
-import io.reactivex.Observable;
+import io.reactivex.Flowable;
+import io.reactivex.Single;
 
-public class GetSum extends UseCase<Integer, GetSum.Params> {
+public class GetSum extends SingleUseCase<Integer, GetSum.Params> {
 
     //take repository here
     private WordRepository wordRepository;
@@ -17,7 +19,7 @@ public class GetSum extends UseCase<Integer, GetSum.Params> {
     }
 
     @Override
-    public Observable<Integer> buildUseCaseObservable(final Params params) {
+    public Single<Integer> buildUseCaseObservable(final Params params) {
         return wordRepository.sum(params.number1, params.number2);
     }
 

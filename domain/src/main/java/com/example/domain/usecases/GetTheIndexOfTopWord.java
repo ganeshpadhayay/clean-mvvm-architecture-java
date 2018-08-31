@@ -1,13 +1,15 @@
 package com.example.domain.usecases;
 
-import com.example.domain.base.UseCase;
+import com.example.domain.base.FlowableUseCase;
+import com.example.domain.base.SingleUseCase;
 import com.example.domain.executor.PostExecutionThread;
 import com.example.domain.models.Word;
 import com.example.domain.repository.WordRepository;
 
-import io.reactivex.Observable;
+import io.reactivex.Flowable;
+import io.reactivex.Single;
 
-public class GetTheIndexOfTopWord extends UseCase<Word, GetTheIndexOfTopWord.Params> {
+public class GetTheIndexOfTopWord extends SingleUseCase<Word, GetTheIndexOfTopWord.Params> {
 
     private WordRepository wordRepository;
 
@@ -17,7 +19,7 @@ public class GetTheIndexOfTopWord extends UseCase<Word, GetTheIndexOfTopWord.Par
     }
 
     @Override
-    public Observable<Word> buildUseCaseObservable(Params params) {
+    public Single<Word> buildUseCaseObservable(Params params) {
         return wordRepository.getTheIndexOfTopWord();
     }
 

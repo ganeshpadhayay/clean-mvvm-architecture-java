@@ -1,15 +1,15 @@
 package com.example.domain.usecases;
 
-import com.example.domain.base.UseCase;
+import com.example.domain.base.FlowableUseCase;
 import com.example.domain.executor.PostExecutionThread;
 import com.example.domain.models.Word;
 import com.example.domain.repository.WordRepository;
 
 import java.util.List;
 
-import io.reactivex.Observable;
+import io.reactivex.Flowable;
 
-public class GetAllWords extends UseCase<List<Word>, GetAllWords.Params> {
+public class GetAllWords extends FlowableUseCase<List<Word>, GetAllWords.Params> {
 
     private WordRepository wordRepository;
 
@@ -19,7 +19,7 @@ public class GetAllWords extends UseCase<List<Word>, GetAllWords.Params> {
     }
 
     @Override
-    public Observable<List<Word>> buildUseCaseObservable(Params params) {
+    public Flowable<List<Word>> buildUseCaseObservable(Params params) {
         return wordRepository.getAllWords();
     }
 

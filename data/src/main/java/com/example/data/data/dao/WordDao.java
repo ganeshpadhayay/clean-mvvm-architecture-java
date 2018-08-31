@@ -8,6 +8,9 @@ import com.example.data.models.Word;
 
 import java.util.List;
 
+import io.reactivex.Flowable;
+import io.reactivex.Single;
+
 //this is the DAO(Data Access Object) which generates the SQL queries using annotations such as @Insert
 //Room uses the DAO to create a clean API for your code.
 @Dao
@@ -19,7 +22,7 @@ public interface WordDao {
     void deleteAll();
 
     @Query("select * from word_table order by word_id asc")
-    List<Word> getAllWords();
+    Flowable<List<Word>> getAllWords();
     //LiveData<T> has no public methods to set/post value in LiveData as here we won't be adding values to this list
     //it will be synced with the room database
     //If the developer wants to update the contents of LiveData then he/she should use MutableLiveData which has
@@ -33,7 +36,7 @@ public interface WordDao {
     void updateThisWord(int wordId, String newWord);
 
     @Query("select * from word_table order by word_id asc limit 1")
-    Word getTheIndexOfTopWord();
+    Single<Word> getTheIndexOfTopWord();
 }
 
 

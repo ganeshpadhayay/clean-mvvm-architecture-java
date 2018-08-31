@@ -6,7 +6,6 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
 import com.example.data.data.dao.WordDao;
@@ -30,7 +29,7 @@ public abstract class WordRoomDatabase extends RoomDatabase {
                     // Create database here
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             WordRoomDatabase.class, "word_database")
-                            .addCallback(roomDatabaseCallback)
+//                            .addCallback(roomDatabaseCallback)
 //                            .fallbackToDestructiveMigration()
                             .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
                             .build();
@@ -69,36 +68,36 @@ public abstract class WordRoomDatabase extends RoomDatabase {
         }
     };
 
-    private static RoomDatabase.Callback roomDatabaseCallback =
-            new RoomDatabase.Callback() {
-                @Override
-                public void onCreate(@NonNull SupportSQLiteDatabase db) {
-                    super.onCreate(db);
-                }
-
-                @Override
-                public void onOpen(@NonNull SupportSQLiteDatabase db) {
-                    super.onOpen(db);
-//                    new PopulateDbAsync(INSTANCE).execute();
-                }
-            };
-
-    private static class PopulateDbAsync extends AsyncTask<Void, Void, Void> {
-
-        private final WordDao wordDao;
-
-        PopulateDbAsync(WordRoomDatabase db) {
-            wordDao = db.wordDao();
-        }
-
-        @Override
-        protected Void doInBackground(final Void... params) {
-//            wordDao.insert(new Word("Hello", 5));
-//            wordDao.insert(new Word("World", 5));
-//            wordDao.insert(new Word("India", 8));
-            return null;
-        }
-    }
+//    private static RoomDatabase.Callback roomDatabaseCallback =
+//            new RoomDatabase.Callback() {
+//                @Override
+//                public void onCreate(@NonNull SupportSQLiteDatabase db) {
+//                    super.onCreate(db);
+//                }
+//
+//                @Override
+//                public void onOpen(@NonNull SupportSQLiteDatabase db) {
+//                    super.onOpen(db);
+////                    new PopulateDbAsync(INSTANCE).execute();
+//                }
+//            };
+//
+//    private static class PopulateDbAsync extends AsyncTask<Void, Void, Void> {
+//
+//        private final WordDao wordDao;
+//
+//        PopulateDbAsync(WordRoomDatabase db) {
+//            wordDao = db.wordDao();
+//        }
+//
+//        @Override
+//        protected Void doInBackground(final Void... params) {
+////            wordDao.insert(new Word("Hello", 5));
+////            wordDao.insert(new Word("World", 5));
+////            wordDao.insert(new Word("India", 8));
+//            return null;
+//        }
+//    }
 
 
 }

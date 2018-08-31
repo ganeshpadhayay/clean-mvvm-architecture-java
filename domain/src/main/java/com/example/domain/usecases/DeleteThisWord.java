@@ -1,12 +1,12 @@
 package com.example.domain.usecases;
 
-import com.example.domain.base.UseCase;
+import com.example.domain.base.SingleUseCase;
 import com.example.domain.executor.PostExecutionThread;
 import com.example.domain.repository.WordRepository;
 
-import io.reactivex.Observable;
+import io.reactivex.Single;
 
-public class DeleteThisWord extends UseCase<Boolean, DeleteThisWord.Params> {
+public class DeleteThisWord extends SingleUseCase<Boolean, DeleteThisWord.Params> {
 
     private WordRepository wordRepository;
 
@@ -16,7 +16,7 @@ public class DeleteThisWord extends UseCase<Boolean, DeleteThisWord.Params> {
     }
 
     @Override
-    public Observable<Boolean> buildUseCaseObservable(final Params params) {
+    public Single<Boolean> buildUseCaseObservable(final Params params) {
         return wordRepository.deleteThisWord(params.wordId);
     }
 

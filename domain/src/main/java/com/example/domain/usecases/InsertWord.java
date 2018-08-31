@@ -1,13 +1,13 @@
 package com.example.domain.usecases;
 
-import com.example.domain.base.UseCase;
+import com.example.domain.base.SingleUseCase;
 import com.example.domain.executor.PostExecutionThread;
 import com.example.domain.models.Word;
 import com.example.domain.repository.WordRepository;
 
-import io.reactivex.Observable;
+import io.reactivex.Single;
 
-public class InsertWord extends UseCase<Boolean, InsertWord.Params> {
+public class InsertWord extends SingleUseCase<Boolean, InsertWord.Params> {
     private WordRepository repository;
 
     public InsertWord(PostExecutionThread postExecutionThread, WordRepository repository) {
@@ -16,7 +16,7 @@ public class InsertWord extends UseCase<Boolean, InsertWord.Params> {
     }
 
     @Override
-    public Observable<Boolean> buildUseCaseObservable(Params params) {
+    public Single<Boolean> buildUseCaseObservable(Params params) {
         return repository.insertThisWord(params.word);
     }
 

@@ -5,7 +5,7 @@ import android.util.Log;
 import com.example.domain.usecases.GetSum;
 import com.example.ganesh.dmsmobileapp.base.BaseViewModel;
 
-import io.reactivex.observers.DisposableObserver;
+import io.reactivex.observers.DisposableSingleObserver;
 
 public class MainViewModel extends BaseViewModel<MainNavigator> {
 
@@ -16,9 +16,9 @@ public class MainViewModel extends BaseViewModel<MainNavigator> {
     }
 
     public void callGetSum(int number1, int number2) {
-        getSumUseCase.execute(new DisposableObserver<Integer>() {
+        getSumUseCase.execute(new DisposableSingleObserver<Integer>() {
             @Override
-            public void onNext(Integer integer) {
+            public void onSuccess(Integer integer) {
                 Log.e("ganesh", "use case on next  " + integer);
                 getNavigator().displaySum(integer);
             }
@@ -26,11 +26,6 @@ public class MainViewModel extends BaseViewModel<MainNavigator> {
             @Override
             public void onError(Throwable e) {
                 e.printStackTrace();
-            }
-
-            @Override
-            public void onComplete() {
-
             }
         }, GetSum.Params.getSum(number1, number2));
     }

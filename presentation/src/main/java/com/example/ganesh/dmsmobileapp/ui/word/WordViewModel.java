@@ -13,7 +13,8 @@ import com.example.ganesh.dmsmobileapp.base.BaseViewModel;
 
 import java.util.List;
 
-import io.reactivex.observers.DisposableObserver;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.subscribers.ResourceSubscriber;
 
 public class WordViewModel extends BaseViewModel<WordNavigator> {
 
@@ -37,15 +38,15 @@ public class WordViewModel extends BaseViewModel<WordNavigator> {
     }
 
     public void getAllWords() {
-        getAllWords.execute(new DisposableObserver<List<Word>>() {
+        getAllWords.execute(new ResourceSubscriber<List<Word>>() {
             @Override
             public void onNext(List<Word> words) {
                 allWords.setValue(words);
             }
 
             @Override
-            public void onError(Throwable e) {
-
+            public void onError(Throwable t) {
+                t.printStackTrace();
             }
 
             @Override
@@ -57,82 +58,65 @@ public class WordViewModel extends BaseViewModel<WordNavigator> {
 
 
     public void insertWord(Word word) {
-        insertWord.execute(new DisposableObserver<Boolean>() {
+        insertWord.execute(new DisposableSingleObserver<Boolean>() {
             @Override
-            public void onNext(Boolean aBoolean) {
-                if (aBoolean)
+            public void onSuccess(Boolean aBoolean) {
+                if (aBoolean) {
                     Log.e("ganesh", "word inserted successfully!!!");
+                }
             }
 
             @Override
             public void onError(Throwable e) {
                 e.printStackTrace();
             }
-
-            @Override
-            public void onComplete() {
-
-            }
         }, InsertWord.Params.insertWord(word));
-
     }
 
     public void getTheIndexOfTopWord(final String action) {
-        getTheIndexOfTopWord.execute(new DisposableObserver<Word>() {
+        getTheIndexOfTopWord.execute(new DisposableSingleObserver<Word>() {
             @Override
-            public void onNext(Word word) {
-                if (word != null)
+            public void onSuccess(Word word) {
+                if (word != null) {
                     getNavigator().updateTopIndex(word.getWordId(), action);
+                }
             }
 
             @Override
             public void onError(Throwable e) {
                 e.printStackTrace();
-            }
-
-            @Override
-            public void onComplete() {
-
             }
         }, GetTheIndexOfTopWord.Params.getTheIndexOfTopWord());
     }
 
     public void deleteThisWord(int wordId) {
-        deleteThisWord.execute(new DisposableObserver<Boolean>() {
+        deleteThisWord.execute(new DisposableSingleObserver<Boolean>() {
             @Override
-            public void onNext(Boolean aBoolean) {
-                if (aBoolean)
+            public void onSuccess(Boolean aBoolean) {
+                if (aBoolean) {
                     Log.e("ganesh", "word deleted successfully!!!");
+                }
             }
 
             @Override
             public void onError(Throwable e) {
                 e.printStackTrace();
-            }
-
-            @Override
-            public void onComplete() {
-
             }
         }, DeleteThisWord.Params.deleteThisWord(wordId));
     }
 
     public void updateThisWord(int wordId, String newWord) {
-        updateThisWord.execute(new DisposableObserver<Boolean>() {
+        updateThisWord.execute(new DisposableSingleObserver<Boolean>() {
             @Override
-            public void onNext(Boolean aBoolean) {
-                if (aBoolean)
+            public void onSuccess(Boolean aBoolean) {
+                if (aBoolean) {
                     Log.e("ganesh", "word updated successfully!!!");
+                }
             }
 
             @Override
             public void onError(Throwable e) {
                 e.printStackTrace();
-            }
-
-            @Override
-            public void onComplete() {
-
             }
         }, UpdateThisWord.Params.updateThisWord(wordId, newWord));
     }
@@ -147,17 +131,15 @@ public class WordViewModel extends BaseViewModel<WordNavigator> {
     @Override
     protected void onCleared() {
         super.onCleared();
-
         if (getAllWords != null)
-            getAllWords = null;
+            getAllWords.dispose();
         if (deleteThisWord != null)
-            deleteThisWord = null;
+            deleteThisWord.dispose();
         if (insertWord != null)
-            insertWord = null;
+            insertWord.dispose();
         if (updateThisWord != null)
-            updateThisWord = null;
+            updateThisWord.dispose();
         if (getTheIndexOfTopWord != null)
-            getTheIndexOfTopWord = null;
-
+            getTheIndexOfTopWord.dispose();
     }
 }
