@@ -1,4 +1,4 @@
-Hybrid of Clean and MVVM Architecture using RxJava2, Dagger2, Retrofit2, Room, ViewModel
+Hybrid of Clean and MVVM Architecture using RxJava2, Dagger2, Retrofit, Room, ViewModel, LiveData
 
 1. DATA layer has repository pattern in which the offline data is stored using Room Persistence Library along with RxJava2 for reactive operations and repositry is also using retrofit remote service to do the network operations.
 
