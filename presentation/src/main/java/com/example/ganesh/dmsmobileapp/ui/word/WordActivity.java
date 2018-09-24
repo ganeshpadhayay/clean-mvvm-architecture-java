@@ -2,6 +2,8 @@ package com.example.ganesh.dmsmobileapp.ui.word;
 
 import android.arch.lifecycle.Observer;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -13,7 +15,9 @@ import com.example.domain.models.Word;
 import com.example.ganesh.dmsmobileapp.MainApplication;
 import com.example.ganesh.dmsmobileapp.R;
 import com.example.ganesh.dmsmobileapp.base.BaseActivity;
+import com.example.ganesh.dmsmobileapp.ui.about.AboutFragment;
 import com.example.ganesh.dmsmobileapp.ui.adapter.WordListAdapter;
+import com.example.ganesh.dmsmobileapp.ui.help.HelpFragment;
 
 import java.util.List;
 
@@ -31,12 +35,28 @@ public class WordActivity extends BaseActivity<WordViewModel> implements View.On
     private EditText editTextWord;
     private WordListAdapter adapter;
 
+    private AboutFragment aboutFragment;
+    private HelpFragment helpFragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_word);
         ((MainApplication) getApplicationContext()).getComponent().inject(this);
+
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        aboutFragment = new AboutFragment();
+        transaction.replace(R.id.container1, aboutFragment);
+        transaction.commit();
+
+        FragmentManager manager2 = getSupportFragmentManager();
+        FragmentTransaction transaction2 = manager.beginTransaction();
+        helpFragment = new HelpFragment();
+        transaction2.replace(R.id.container2, helpFragment);
+        transaction2.commit();
+
         editTextWord = findViewById(R.id.activity_word_et_word);
         deleteButton = findViewById(R.id.activity_main_delete_button);
         updateButton = findViewById(R.id.activity_main_update_button);

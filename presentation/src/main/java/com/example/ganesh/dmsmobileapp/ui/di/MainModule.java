@@ -9,6 +9,8 @@ import com.example.domain.usecases.GetTheIndexOfTopWord;
 import com.example.domain.usecases.InsertWord;
 import com.example.domain.usecases.UpdateThisWord;
 import com.example.ganesh.dmsmobileapp.base.ViewModelProviderFactory;
+import com.example.ganesh.dmsmobileapp.ui.about.AboutViewModel;
+import com.example.ganesh.dmsmobileapp.ui.help.HelpViewModel;
 import com.example.ganesh.dmsmobileapp.ui.main.MainViewModel;
 import com.example.ganesh.dmsmobileapp.ui.word.WordViewModel;
 
@@ -31,6 +33,16 @@ public class MainModule {
     @Provides
     WordViewModel provideWordViewModel(GetAllWords getAllWords, InsertWord insertWord, DeleteThisWord deleteThisWord, UpdateThisWord updateThisWord, GetTheIndexOfTopWord getTheIndexOfTopWord) {
         return new WordViewModel(getAllWords, insertWord, deleteThisWord, updateThisWord, getTheIndexOfTopWord);
+    }
+
+    @Provides
+    AboutViewModel provideAboutViewModel() {
+        return new AboutViewModel();
+    }
+
+    @Provides
+    HelpViewModel provideHelpViewModel() {
+        return new HelpViewModel();
     }
 }
 
